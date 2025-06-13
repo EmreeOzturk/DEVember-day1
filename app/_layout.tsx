@@ -2,11 +2,18 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Image } from 'expo-image';
 import { Stack } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+// Prevent the splash screen from auto-hiding before asset loading is complete
+SplashScreen.preventAutoHideAsync();
+
+
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -14,8 +21,15 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
+  useEffect(() => {
+    if (loaded) {
+      // Hide the splash screen after fonts are loaded
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
   if (!loaded) {
-    // Async font loading only occurs in development.
+    // Return null to keep splash screen visible while loading
     return null;
   }
 
@@ -29,7 +43,7 @@ export default function RootLayout() {
             headerTitle: 'Devember Day 1',
             headerLeft: () => (
               <Image
-                source={require('../assets/images/react-logo.png')}
+                source={require('../assets/images/icon.png')}
                 style={styles.reactLogo}
               />
             ),
@@ -44,7 +58,7 @@ export default function RootLayout() {
                 }}
                 style={styles.userProfileContainer}>
                 <Image
-                  source={require('../assets/images/react-logo.png')}
+                  source={require('../assets/images/splash-icon.png')}
                   style={styles.userProfileImage}
                 />
               </TouchableOpacity>
