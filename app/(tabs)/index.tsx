@@ -1,5 +1,5 @@
+import { Link, RelativePathString } from 'expo-router';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
 
 const DATA = [...Array(24)].map((_, index) => ({
   id: index.toString(),
@@ -7,13 +7,15 @@ const DATA = [...Array(24)].map((_, index) => ({
 }));
 
 const Item = ({ title }: { title: string }) => (
-  <TouchableOpacity
-    onPress={() => {
-      console.log('item pressed', title);
-    }}
-    style={styles.item}>
-    <Text>{title}</Text>
-  </TouchableOpacity>
+  <Link href={`/day${title}/` as RelativePathString} asChild>
+    <TouchableOpacity
+      onPress={() => {
+        console.log('item pressed', title);
+      }}
+      style={styles.item}>
+      <Text>{title}</Text>
+    </TouchableOpacity>
+  </Link>
 );
 
 export default function HomeScreen() {
